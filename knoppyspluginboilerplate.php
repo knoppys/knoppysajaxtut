@@ -33,11 +33,15 @@ add_action( 'wp_enqueue_scripts', 'knoppy_ajax_plugin_scripts' );
 /***************************
  * Create the shortcode we'll use for the demo
  ****************************/
-function knoppys_shortcode() { ?>
+function knoppys_shortcode() {
+
+	$ajax_nonce = wp_create_nonce( "my-special-string" );
+	?>
 
 	<!-- Simple form to post some data -->
 	<label>Number of posts to retrieve.</label><br>
 	<input type="text" name="noofposts" id="noofposts">
+	<input type="hidden" name="nonce" id="nonce" value="<?php echo $ajax_nonce; ?>">
 	<button type="button" class="button" id="fetch">Fetch</button>
 
 	<!-- An empty div for adding data returned. -->
@@ -47,11 +51,26 @@ function knoppys_shortcode() { ?>
 
 add_shortcode( 'knoppys', 'knoppys_shortcode' );
 
+add_action( 'wp_ajax_my_action', 'my_action_function' );
+function my_action_function() {
+	check_ajax_referer( 'my-special-string', 'security' );
+	echo sanitize_text_field( $_POST['my_string'] );
+	wp_die();
+}
+
 /***************************
  * Carry out the function with the data just sent from the javascript
  ****************************/
 
 function knoppy_ajax_implement_ajax_getposts() {
+
+	/**
+	 * Check to make sure the request is from this site
+	 * This will automatically die the script if it fails
+	 *
+	 * @see https://codex.wordpress.org/Function_Reference/check_ajax_referer
+	 */
+	check_ajax_referer( 'my-special-string', 'security' );
 
 	// Force a limit so you don't crash MySQL
 	$limit     = 5;
@@ -93,6 +112,7 @@ function knoppy_ajax_implement_ajax_getposts() {
 		}
 	} else {
 		// Something was not right
+		die();
 	}
 
 	die();

@@ -12,7 +12,8 @@ jQuery(document).ready(function () {
 		//var siteUrl = siteUrlobject.siteUrl + '/wp-admin/admin-ajax.php';
 
 		// Method 1 :: Get the individual value of the input so we know how many posts to retrieve
-		var noofposts = jQuery('#noofposts').val();
+		var noofposts = jQuery('#noofposts').val(),
+			nonce     = jQuery('#nonce').val();
 
 		// Method 2 :: For larger amounts of information you can serialise the data into a single string which can be broken up at the other end. 
 		//var data = jQuery('#the-name-of-a-form').serialise();				
@@ -23,7 +24,7 @@ jQuery(document).ready(function () {
 				type: 'POST',
 
 				// Method 2 :: Send the individual value to our function
-				data: 'action=getposts&noofposts=' + noofposts,
+				data: 'action=getposts&security=' + nonce + '&noofposts=' + noofposts,
 
 				//Method 3 :: Send the variable to our function
 				// data:'action=getposts&data=' + data
@@ -35,27 +36,32 @@ jQuery(document).ready(function () {
 
 					//console.log(data);
 
-					// Empty last responce or you could just keep appending more in a different situation like load more setup
-					jQuery('#result').html('');
+					// Our nonce failed
+					if (data == -1) {
 
-					// Parse out returned jSON
-					var responce = jQuery.parseJSON(data);
-					var template = '';
+					} else {
 
-					// Loop through the data
-					jQuery.each(responce, function (key, item) {
+						// Empty last responce or you could just keep appending more in a different situation like load more setup
+						jQuery('#result').html('');
 
-						// These are our objects
-						//console.log(item.title);
-						//console.log(item.excerpt);
+						// Parse out returned jSON
+						var responce = jQuery.parseJSON(data);
+						var template = '';
 
-						// Templating this way gives your way more options, eg. Coffie, Angular, etc.. templating
-						template = '<table><tr><td>' + item.title + '</td></tr><tr><td>' + item.excerpt + '</td></tr></table>';
+						// Loop through the data
+						jQuery.each(responce, function (key, item) {
 
-						// Display our results
-						jQuery(template).appendTo('#result');
-					});
+							// These are our objects
+							//console.log(item.title);
+							//console.log(item.excerpt);
 
+							// Templating this way gives your way more options, eg. Coffie, Angular, etc.. templating
+							template = '<table><tr><td>' + item.title + '</td></tr><tr><td>' + item.excerpt + '</td></tr></table>';
+
+							// Display our results
+							jQuery(template).appendTo('#result');
+						});
+					}
 				}
 			});
 		});
