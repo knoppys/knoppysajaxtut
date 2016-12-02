@@ -52,48 +52,44 @@ add_shortcode( 'knoppys', 'knoppys_shortcode' );
  ****************************/
 
 function knoppy_ajax_implement_ajax_getposts() {
-	if ( isset( $_POST['noofposts'] ) ) {
+
+	// Force a limit so you don't crash MySQL
+	$limit     = 5;
+	$noofposts = ( isset( $_POST['noofposts'] ) && is_integer( $_POST['noofposts'] ) ) ? $_POST['noofposts'] : false;
+
+	if ( $noofposts && $noofposts <= $limit ) {
 
 		// WP_Query arguments
 		$args = array(
 			'post_type'      => array( 'post' ),
-			'posts_per_page' => ( $_POST['noofposts'] ),
+			'posts_per_page' => ( $noofposts ),
 		);
 
 		// The Query
 		$query = new WP_Query( $args );
-
-		ob_start();
-
+		$data  = array();
 
 		// The Loop
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) {
-				$query->the_post(); ?>
+				$query->the_post();
 
-				<table>
-					<tr>
-						<td>
-							<?php the_title(); ?>
-						</td>
-					</tr>
-					<tr>
-						<td>
-							<?php the_excerpt(); ?>
-						</td>
-					</tr>
-				</table>
-
-			<?php }
-		} else {
+				$post_id                     = get_the_ID();
+				$data[ $post_id ]['title']   = get_the_title();
+				$data[ $post_id ]['excerpt'] = get_the_excerpt();
+			}
 		}
+
 		wp_reset_postdata();
 
-		$data = ob_get_clean();
-		echo $data;
-
-		die();
+		if ( sizeof( $data ) ) {
+			echo json_encode( $data );
+		} else {
+			echo 'No posts found';
+		}
 	}
+
+	die();
 }
 
 add_action( 'wp_ajax_getposts', 'knoppy_ajax_implement_ajax_getposts' );
