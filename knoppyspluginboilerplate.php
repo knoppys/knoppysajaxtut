@@ -51,12 +51,6 @@ function knoppys_shortcode() {
 
 add_shortcode( 'knoppys', 'knoppys_shortcode' );
 
-add_action( 'wp_ajax_my_action', 'my_action_function' );
-function my_action_function() {
-	check_ajax_referer( 'my-special-string', 'security' );
-	echo sanitize_text_field( $_POST['my_string'] );
-	wp_die();
-}
 
 /***************************
  * Carry out the function with the data just sent from the javascript
