@@ -8,7 +8,8 @@ jQuery(document).ready(function () {
 	jQuery('#fetch').on('click', function () {
 
 		// In order to make the function dynamic, we make the site url a variable.
-		var siteUrl = siteUrlobject.siteUrl + '/wp-admin/admin-ajax.php';
+		// @see knoppy_ajax_add_ajax_library()
+		//var siteUrl = siteUrlobject.siteUrl + '/wp-admin/admin-ajax.php';
 
 		// Method 1 :: Get the individual value of the input so we know how many posts to retrieve
 		var noofposts = jQuery('#noofposts').val();
@@ -18,7 +19,7 @@ jQuery(document).ready(function () {
 
 		jQuery(function () {
 			jQuery.ajax({
-				url: siteUrl,
+				url: ajaxurl,
 				type: 'POST',
 
 				// Method 2 :: Send the individual value to our function

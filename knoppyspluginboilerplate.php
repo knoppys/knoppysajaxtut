@@ -87,8 +87,8 @@ function knoppy_ajax_implement_ajax_getposts() {
 			echo json_encode( $data );
 		} else {
 			// No posts send a nice responce
-			$data[ 0 ]['title']   = 'Sorry!';
-			$data[ 0 ]['excerpt'] = 'No posts were found.';
+			$data[0]['title']   = 'Sorry!';
+			$data[0]['excerpt'] = 'No posts were found.';
 			echo json_encode( $data );
 		}
 	} else {
@@ -101,3 +101,22 @@ function knoppy_ajax_implement_ajax_getposts() {
 add_action( 'wp_ajax_getposts', 'knoppy_ajax_implement_ajax_getposts' );
 add_action( 'wp_ajax_nopriv_getposts', 'knoppy_ajax_implement_ajax_getposts' );
 
+
+/**
+ * Adds the WordPress Ajax Library to the frontend.
+ *
+ * The problem with your method in the js is that its a fixed location
+ * If someone uses your plugin and relocates WP directories your plugin breaks
+ * Not a problem with this method
+ */
+function knoppy_ajax_add_ajax_library() {
+
+	$html = '<script type="text/javascript">';
+	$html .= 'var ajaxurl = "' . admin_url( 'admin-ajax.php' ) . '"';
+	$html .= '</script>';
+
+	echo $html;
+
+}
+
+add_action( 'wp_head', 'knoppy_ajax_add_ajax_library' );
