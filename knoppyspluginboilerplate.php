@@ -55,7 +55,7 @@ function knoppy_ajax_implement_ajax_getposts() {
 
 	// Force a limit so you don't crash MySQL
 	$limit     = 5;
-	$noofposts = ( isset( $_POST['noofposts'] ) && is_integer( $_POST['noofposts'] ) ) ? $_POST['noofposts'] : false;
+	$noofposts = ( isset( $_POST['noofposts'] ) && is_integer( (int) $_POST['noofposts'] ) ) ? (int) $_POST['noofposts'] : false;
 
 	if ( $noofposts && $noofposts <= $limit ) {
 
@@ -82,11 +82,17 @@ function knoppy_ajax_implement_ajax_getposts() {
 
 		wp_reset_postdata();
 
+		// We have posts send out array in jSON
 		if ( sizeof( $data ) ) {
 			echo json_encode( $data );
 		} else {
-			echo 'No posts found';
+			// No posts send a nice responce
+			$data[ 0 ]['title']   = 'Sorry!';
+			$data[ 0 ]['excerpt'] = 'No posts were found.';
+			echo json_encode( $data );
 		}
+	} else {
+		// Something was not right
 	}
 
 	die();
