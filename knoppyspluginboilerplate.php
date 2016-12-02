@@ -23,12 +23,12 @@ define( 'PLUGIN__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 /***************************
  * Load Scripts
  ****************************/
-function plugin_scripts() {
+function knoppy_ajax_plugin_scripts() {
 	wp_enqueue_script( 'knoppy-ajax-core', plugin_dir_url( __FILE__ ) . 'core.js', array( 'jquery' ), '1.0.0', true );
 	wp_localize_script( 'knoppy-ajax-core', 'siteUrlobject', array( 'siteUrl' => get_bloginfo( 'url' ) ) );
 }
 
-add_action( 'wp_enqueue_scripts', 'plugin_scripts' );
+add_action( 'wp_enqueue_scripts', 'knoppy_ajax_plugin_scripts' );
 
 /***************************
  * Create the shortcode we'll use for the demo
@@ -51,7 +51,7 @@ add_shortcode( 'knoppys', 'knoppys_shortcode' );
  * Carry out the function with the data just sent from the javascript
  ****************************/
 
-function implement_ajax_getposts() {
+function knoppy_ajax_implement_ajax_getposts() {
 	if ( isset( $_POST['noofposts'] ) ) {
 
 		// WP_Query arguments
@@ -96,6 +96,6 @@ function implement_ajax_getposts() {
 	}
 }
 
-add_action( 'wp_ajax_getposts', 'implement_ajax_getposts' );
-add_action( 'wp_ajax_nopriv_getposts', 'implement_ajax_getposts' );
+add_action( 'wp_ajax_getposts', 'knoppy_ajax_implement_ajax_getposts' );
+add_action( 'wp_ajax_nopriv_getposts', 'knoppy_ajax_implement_ajax_getposts' );
 
