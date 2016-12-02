@@ -93,4 +93,3 @@ function implement_ajax_getposts() {
 add_action('wp_ajax_getposts', 'implement_ajax_getposts');
 add_action('wp_ajax_nopriv_getposts', 'implement_ajax_getposts'); 
 
-?>
