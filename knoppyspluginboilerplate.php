@@ -24,8 +24,8 @@ define( 'PLUGIN__PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
  * Load Scripts
  ****************************/
 function plugin_scripts() {
-	wp_enqueue_script( 'core', plugin_dir_url( __FILE__ ) . 'core.js', array( 'jquery' ), '1.0.0', true );
-	wp_localize_script( 'core', 'siteUrlobject', array( 'siteUrl' => get_bloginfo( 'url' ) ) );
+	wp_enqueue_script( 'knoppy-ajax-core', plugin_dir_url( __FILE__ ) . 'core.js', array( 'jquery' ), '1.0.0', true );
+	wp_localize_script( 'knoppy-ajax-core', 'siteUrlobject', array( 'siteUrl' => get_bloginfo( 'url' ) ) );
 }
 
 add_action( 'wp_enqueue_scripts', 'plugin_scripts' );
