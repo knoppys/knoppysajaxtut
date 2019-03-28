@@ -46,6 +46,7 @@ function knoppys_shortcode() {
 
 	<!-- An empty div for adding data returned. -->
 	<div id="result"></div>
+	<div class="anotherresult"></div>
 
 <?php }
 
